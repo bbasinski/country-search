@@ -29,6 +29,7 @@ RUN apk add --update \
     php7-simplexml \
     php7-xdebug \
     php7-zip \
+    php7-soap \
     make \
     curl
 
