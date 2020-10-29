@@ -23,7 +23,7 @@ class CountriesController extends AbstractController
         if (!empty($query)) {
             $countries = array_values(
                 array_filter($countries, function(\stdClass $object) use ($query) {
-                    return stripos($object->sName, $query) !== false;
+                    return stripos($object->sName, $query) === 0;
                 })
             );
         }
