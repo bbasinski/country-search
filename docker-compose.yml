@@ -1,0 +1,22 @@
+version: '3.3'
+services:
+  php:
+    container_name: cs-php
+    build: ./docker/php-fpm
+    ports:
+      - "9000:9001"
+    volumes:
+      - .:/var/www/symfony:cached
+      - ./logs/symfony:/var/www/symfony/var/log:cached
+    extra_hosts:
+      - "docker.host:127.0.0.1"
+  nginx:
+    container_name: cs-nginx
+    build: ./docker/nginx
+    ports:
+      - "5000:80"
+    links:
+      - php
+    volumes:
+      - ./logs/nginx:/var/log/nginx:cached
+      - .:/var/www/symfony:cached
