@@ -1,28 +1,76 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app" class="container-fluid d-flex my-5 align-items-center flex-column">
+    <h1 class="my-5">Country search</h1>
+    <div class="search-container">
+      <input type="text" class="form-control" placeholder="Start typing..."  v-debounce:300ms="fetchCountries" v-model="query">
+    </div>
+    <div class="result-container mt-4 d-flex flex-column">
+      <div v-if="isLoading" class="spinner-border mx-auto"></div>
+      <table v-else class="table">
+        <thead>
+        <tr>
+          <th>ISO Code</th>
+          <th>Name</th>
+          <th>Currency</th>
+          <th>Languages</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="country in countries" :key="country.sISOCode">
+          <td>{{ country.sISOCode }}</td>
+          <td>{{ country.sName }}</td>
+          <td>{{ country.sCurrencyISOCode }}</td>
+          <td>{{ getLanguages(country) }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import axios from 'axios';
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
+  data() {
+    return {
+      isLoading: false,
+      query: '',
+      countries: [],
+    }
+  },
+  mounted() {
+    this.fetchCountries();
+  },
+  methods: {
+    fetchCountries() {
+      this.isLoading = true;
+      axios.get('http://localhost:5000/countries', {
+        params: {q: this.query}
+      }).then((r) => {
+        this.countries = r.data.countries
+      }).finally(() => {
+        this.isLoading = false;
+      });
+    },
+    getLanguages(country) {
+      if (!country.Languages.tLanguage) {
+        return '-';
+      }
+
+      if (!Array.isArray(country.Languages.tLanguage)) {
+        return country.Languages.tLanguage.sName;
+      }
+
+      return country.Languages.tLanguage.map((i) => i.sName).join(', ');
+    }
+  },
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+html, body, #app {
+  height: 100%;
 }
 </style>

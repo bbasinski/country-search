@@ -21,6 +21,6 @@ class CountryInfoSoap extends \SoapClient
 
     public function fetchCountries()
     {
-        return $this->ListOfCountryNamesByName()->ListOfCountryNamesByNameResult->tCountryCodeAndName;
+        return $this->FullCountryInfoAllCountries()->FullCountryInfoAllCountriesResult->tCountryInfo;
     }
 }
