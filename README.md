@@ -29,6 +29,7 @@ http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?W
 * Cache
 * Languages sort
 * Fetch continent name
+* Clear sort on fetch
 
 ## HOW TO USE IT 
 ```docker-compose up```
