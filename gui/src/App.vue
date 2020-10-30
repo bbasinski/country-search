@@ -1,6 +1,7 @@
 <template>
   <div id="app" class="container-fluid d-flex my-5 align-items-center flex-column">
     <h1>Country search</h1>
+    <p v-if="sort.length">Current sort: {{ sort }} {{ sortDesc ? 'DESC' : 'ASC' }}</p>
     <div class="search-container mt-4">
       <input type="text" class="form-control" placeholder="Start typing..."
              v-debounce:300ms="fetchCountries" v-model="query">
@@ -11,16 +12,28 @@
         <thead>
         <tr>
           <th>Flag</th>
-          <th>Name</th>
-          <th>ISO Code</th>
-          <th>Capital City</th>
-          <th>Continent</th>
-          <th>Currency</th>
-          <th>Languages</th>
+          <th>
+            <a href="#" @click="toggleSort('sName')">Name</a>
+          </th>
+          <th>
+            <a href="#" @click="toggleSort('sISOCode')">ISO Code</a>
+          </th>
+          <th>
+            <a href="#" @click="toggleSort('sCapitalCity')">Capital City</a>
+          </th>
+          <th>
+            <a href="#" @click="toggleSort('sContinentCode')">Continent</a>
+          </th>
+          <th>
+            <a href="#" @click="toggleSort('sCurrencyISOCode')">Currency</a>
+          </th>
+          <th>
+            Languages
+          </th>
         </tr>
         </thead>
         <tbody v-if="countries.length">
-        <tr v-for="country in countries" :key="country.sISOCode">
+        <tr v-for="country in sortedCountries" :key="country.sISOCode">
           <td><img :src="country.sCountryFlag" :alt="country.sISOCode" width="20" height="10"></td>
           <td>{{ country.sName }}</td>
           <td>{{ country.sISOCode }}</td>
@@ -51,6 +64,8 @@ export default {
       isLoading: false,
       query: '',
       countries: [],
+      sort: '',
+      sortDesc: false
     }
   },
   mounted() {
@@ -77,6 +92,34 @@ export default {
       }
 
       return country.Languages.tLanguage.map((i) => i.sName).join(', ');
+    },
+    toggleSort(col) {
+      if (!this.sort.length || this.sort !== col) {
+        this.sort = col;
+        this.sortDesc = false;
+      } else {
+        this.sortDesc = !this.sortDesc;
+
+      }
+    },
+  },
+  computed: {
+    sortedCountries() {
+      if (!this.sort.length) {
+        return this.countries;
+      }
+
+      let countriesToSort = JSON.parse(JSON.stringify(this.countries));
+
+      return countriesToSort.sort((a, b) => {
+        if (a[this.sort] < b[this.sort] ){
+          return this.sortDesc ? 1 : -1;
+        }
+        if (a[this.sort] > b[this.sort]){
+          return this.sortDesc ? -1 : 1;
+        }
+        return 0;
+      });
     },
   },
 }
