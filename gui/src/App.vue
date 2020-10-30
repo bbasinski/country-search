@@ -1,24 +1,31 @@
 <template>
   <div id="app" class="container-fluid d-flex my-5 align-items-center flex-column">
-    <h1 class="my-5">Country search</h1>
-    <div class="search-container">
-      <input type="text" class="form-control" placeholder="Start typing..."  v-debounce:300ms="fetchCountries" v-model="query">
+    <h1>Country search</h1>
+    <div class="search-container mt-4">
+      <input type="text" class="form-control" placeholder="Start typing..."
+             v-debounce:300ms="fetchCountries" v-model="query">
     </div>
     <div class="result-container mt-4 d-flex flex-column">
       <div v-if="isLoading" class="spinner-border mx-auto"></div>
       <table v-else class="table">
         <thead>
         <tr>
-          <th>ISO Code</th>
+          <th>Flag</th>
           <th>Name</th>
+          <th>ISO Code</th>
+          <th>Capital City</th>
+          <th>Continent</th>
           <th>Currency</th>
           <th>Languages</th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="country in countries" :key="country.sISOCode">
-          <td>{{ country.sISOCode }}</td>
+          <td><img :src="country.sCountryFlag" :alt="country.sISOCode" width="20" height="10"></td>
           <td>{{ country.sName }}</td>
+          <td>{{ country.sISOCode }}</td>
+          <td>{{ country.sCapitalCity }}</td>
+          <td>{{ country.sContinentCode }}</td>
           <td>{{ country.sCurrencyISOCode }}</td>
           <td>{{ getLanguages(country) }}</td>
         </tr>
