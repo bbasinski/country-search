@@ -1,22 +1,29 @@
 version: '3.3'
 services:
-  php:
+  cs-php:
     container_name: cs-php
     build: ./docker/php-fpm
     ports:
       - "9000:9001"
     volumes:
-      - .:/var/www/symfony:cached
-      - ./logs/symfony:/var/www/symfony/var/log:cached
+      - ./api:/var/www/symfony:cached
+      - ./api/logs/symfony:/var/www/symfony/var/log:cached
     extra_hosts:
       - "docker.host:127.0.0.1"
-  nginx:
-    container_name: cs-nginx
+  cs-api:
+    container_name: cs-api
     build: ./docker/nginx
     ports:
       - "5000:80"
     links:
-      - php
+      - cs-php
     volumes:
-      - ./logs/nginx:/var/log/nginx:cached
-      - .:/var/www/symfony:cached
+      - ./api/logs/nginx:/var/log/nginx:cached
+      - ./api:/var/www/symfony:cached
+  cs-gui:
+    container_name: cs-gui
+    image: httpd:latest
+    ports:
+      - "4000:80"
+    volumes:
+      - ./gui/dist:/usr/local/apache2/htdocs/
