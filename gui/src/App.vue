@@ -19,7 +19,7 @@
           <th>Languages</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody v-if="countries.length">
         <tr v-for="country in countries" :key="country.sISOCode">
           <td><img :src="country.sCountryFlag" :alt="country.sISOCode" width="20" height="10"></td>
           <td>{{ country.sName }}</td>
@@ -30,6 +30,11 @@
           <td>{{ getLanguages(country) }}</td>
         </tr>
         </tbody>
+        <tbody v-else>
+        <tr>
+          <td colspan="7" class="text-center">Nothing here</td>
+        </tr>
+        </tbody>
       </table>
     </div>
   </div>
@@ -37,6 +42,7 @@
 
 <script>
 import axios from 'axios';
+
 
 export default {
   name: 'App',
@@ -71,13 +77,14 @@ export default {
       }
 
       return country.Languages.tLanguage.map((i) => i.sName).join(', ');
-    }
+    },
   },
 }
 </script>
 
 <style>
-html, body, #app {
+html, body, #app, .result-container {
   height: 100%;
+  width: 100%;
 }
 </style>
